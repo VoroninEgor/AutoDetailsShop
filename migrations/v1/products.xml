@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="create_products_table" author="Egor Voronin">
+        <sql>
+            CREATE TABLE products (
+                id BIGSERIAL primary key,
+                name varchar not null,
+                price DOUBLE PRECISION not null,
+                description varchar not null,
+                type varchar not null,
+                created TIMESTAMP not null,
+                updated TIMESTAMP not null
+            );
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS products;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

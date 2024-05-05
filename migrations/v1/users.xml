@@ -1,0 +1,25 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="create_users_table" author="Egor Voronin">
+        <sql>
+            CREATE TABLE users (
+                id BIGSERIAL primary key,
+                name VARCHAR unique not null,
+                password VARCHAR not null,
+                email VARCHAR unique not null,
+                role VARCHAR not null,
+                created TIMESTAMP not null,
+                updated TIMESTAMP not null
+            );
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS users;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

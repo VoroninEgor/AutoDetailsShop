@@ -1,0 +1,35 @@
+services:
+  postgresql:
+    image: postgres:16
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: auto-details-shop
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - auto-details-shop:/var/lib/postgresql/data
+    networks:
+      - backend
+
+  liquibase-migrations:
+    image: liquibase/liquibase:4.25
+    depends_on:
+      - postgresql
+    command:
+      - --changelog-file=master.xml
+      - --driver=org.postgresql.Driver
+      - --url=jdbc:postgresql://postgresql:5432/auto-details-shop
+      - --username=postgres
+      - --password=postgres
+      - update
+    volumes:
+      - ./migrations:/liquibase/changelog
+    networks:
+      - backend
+
+networks:
+  backend: {}
+
+volumes:
+  auto-details-shop: { }

@@ -1,0 +1,21 @@
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+
+    <changeSet id="create_cart_products_table" author="Egor Voronin">
+        <sql>
+            CREATE TABLE cart_products (
+                id BIGSERIAL primary key,
+                products_id BIGINT REFERENCES products(id) ON DELETE CASCADE,
+                carts_id BIGINT REFERENCES carts(id) ON DELETE CASCADE
+            );
+        </sql>
+        <rollback>
+            <sql>
+                DROP TABLE IF EXISTS cart_products;
+            </sql>
+        </rollback>
+    </changeSet>
+
+</databaseChangeLog>

@@ -1,0 +1,19 @@
+server:
+  port: 8090
+spring:
+  datasource:
+    password: postgres
+    username: postgres
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/auto-details-shop
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+  liquibase:
+    enabled: false
+
+springdoc:
+  swagger-ui:
+    path: "/swagger-ui"
+    operations-sorter: method
