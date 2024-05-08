@@ -1,14 +1,16 @@
 package com.rmnk12k.service;
 
-import com.rmnk12k.dto.user.UserCreateRequest;
+import com.rmnk12k.dto.user.RegisterUserRequest;
 import com.rmnk12k.dto.user.UserResponse;
 import com.rmnk12k.dto.user.UserUpdateRequest;
 import com.rmnk12k.entity.Cart;
 import com.rmnk12k.entity.User;
-import com.rmnk12k.exception.NotUniqLoginOrEmailException;
+import com.rmnk12k.exception.EmailNotUniqException;
 import com.rmnk12k.exception.UserNotFoundException;
 import com.rmnk12k.repo.CartRepo;
 import com.rmnk12k.repo.UserRepo;
+import com.rmnk12k.utill.UserRole;
+import com.rmnk12k.utill.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -27,16 +29,16 @@ public class UserService {
     private final UserRepo userRepo;
     private final CartRepo cartRepo;
 
-    public void create(UserCreateRequest userCreateRequest) {
-        log.info("create user: {}", userCreateRequest);
+    public void create(RegisterUserRequest registerUserRequest) {
+        log.info("create user: {}", registerUserRequest);
 
         Timestamp currentTime = Timestamp.valueOf(LocalDateTime.now());
         try {
             User user = userRepo.save(User.builder()
-                    .name(userCreateRequest.name())
-                    .password(userCreateRequest.password())
-                    .email(userCreateRequest.email())
-                    .role(userCreateRequest.role())
+                    .name(registerUserRequest.name())
+                    .password(registerUserRequest.password())
+                    .email(registerUserRequest.email())
+                    .role(UserRole.USER)
                     .created(currentTime)
                     .updated(currentTime)
                     .build());
@@ -45,7 +47,7 @@ public class UserService {
                     .build();
             cartRepo.save(cart);
         } catch (DataIntegrityViolationException e) {
-            throw new NotUniqLoginOrEmailException();
+            throw new EmailNotUniqException();
         }
     }
 
@@ -64,7 +66,7 @@ public class UserService {
                     .name(userUpdateRequest.name())
                     .password(userUpdateRequest.password())
                     .email(userUpdateRequest.email())
-                    .role(userUpdateRequest.role())
+                    .role(oldUser.getRole())
                     .created(oldUser.getCreated())
                     .updated(Timestamp.valueOf(LocalDateTime.now()))
                     .build();
@@ -76,28 +78,14 @@ public class UserService {
         log.info("get user with id: {}", id);
 
         User user = userRepo.findById(id).orElseThrow(UserNotFoundException::new);
-        return UserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .email(user.getEmail())
-                .role(user.getRole())
-                .created(user.getCreated())
-                .updated(user.getUpdated())
-                .build();
+        return UserMapper.mapUserToUserResponse(user);
     }
 
     public List<UserResponse> getAllUser() {
         log.info("get all users");
 
-        return userRepo.findAll().stream().map(
-                user -> UserResponse.builder()
-                        .id(user.getId())
-                        .name(user.getName())
-                        .email(user.getEmail())
-                        .role(user.getRole())
-                        .created(user.getCreated())
-                        .updated(user.getUpdated())
-                        .build())
+        return userRepo.findAll().stream()
+                .map(UserMapper::mapUserToUserResponse)
                 .toList();
     }
 }

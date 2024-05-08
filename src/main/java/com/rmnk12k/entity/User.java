@@ -1,5 +1,6 @@
 package com.rmnk12k.entity;
 
+import com.rmnk12k.utill.UserRole;
 import jakarta.persistence.*;
 import jakarta.websocket.OnError;
 import lombok.AllArgsConstructor;
@@ -27,7 +28,8 @@ public class User {
 
     private String email;
 
-    private String role;
+    @Enumerated(value = EnumType.STRING)
+    private UserRole role;
 
     @Temporal(value = TemporalType.TIMESTAMP)
     private Timestamp created;

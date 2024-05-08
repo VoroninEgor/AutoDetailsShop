@@ -1,6 +1,6 @@
 package com.rmnk12k.controller;
 
-import com.rmnk12k.dto.user.UserCreateRequest;
+import com.rmnk12k.dto.user.RegisterUserRequest;
 import com.rmnk12k.dto.user.UserResponse;
 import com.rmnk12k.dto.user.UserUpdateRequest;
 import com.rmnk12k.service.UserService;
@@ -28,9 +28,10 @@ public class UsersController {
         return userService.getUser(id);
     }
 
+    // заменила регистрация
     @PostMapping
-    public void createUser(@RequestBody @Valid UserCreateRequest userCreateRequest) {
-        userService.create(userCreateRequest);
+    public void createUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
+        userService.create(registerUserRequest);
     }
 
     @DeleteMapping("/{id}")

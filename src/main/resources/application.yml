@@ -17,3 +17,8 @@ springdoc:
   swagger-ui:
     path: "/swagger-ui"
     operations-sorter: method
+
+security:
+  jwt:
+    secret-key: b0421daddc1884241c87d6d7127cc6bc83669a1f24e0dee96b66b7aced0d2c53
+    expiration-time: 3600000

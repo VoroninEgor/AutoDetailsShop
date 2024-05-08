@@ -35,8 +35,8 @@ public class ControllerExceptionHandler {
         return toResponseEntity(e, HttpStatus.NOT_FOUND, errorDescription);
     }
 
-    @ExceptionHandler(NotUniqLoginOrEmailException.class)
-    public ResponseEntity<ApiErrorResponse> notUiqNameOrEmail(NotUniqLoginOrEmailException e) {
+    @ExceptionHandler(EmailNotUniqException.class)
+    public ResponseEntity<ApiErrorResponse> notUiqNameOrEmail(EmailNotUniqException e) {
         String errorDescription = "Not uniq name or email";
         return toResponseEntity(e, HttpStatus.BAD_REQUEST, errorDescription);
     }
