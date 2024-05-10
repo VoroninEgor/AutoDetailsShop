@@ -3,6 +3,7 @@ package com.rmnk12k.service;
 import com.rmnk12k.dto.order.CreateOrderRequest;
 import com.rmnk12k.dto.order.ListOrderResponse;
 import com.rmnk12k.dto.order.OrderResponse;
+import com.rmnk12k.dto.order.UpdateOrderStatusRequest;
 import com.rmnk12k.dto.product.ProductResponse;
 import com.rmnk12k.entity.*;
 import com.rmnk12k.exception.CartNotFoundException;
@@ -69,6 +70,14 @@ public class OrderService {
         return new ListOrderResponse(
             orders.stream().map(this::mapOrderToOrderResponse).toList()
         );
+    }
+
+    public void updateStatus(UpdateOrderStatusRequest request) {
+        log.info("update order status with id: {}", request.id());
+
+        Order order = orderRepo.findById(request.id()).orElseThrow(OrderNotFoundException::new);
+        order.setStatus(request.status());
+        orderRepo.save(order);
     }
 
     private OrderResponse mapOrderToOrderResponse(Order order) {

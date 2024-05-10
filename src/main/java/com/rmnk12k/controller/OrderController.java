@@ -3,10 +3,12 @@ package com.rmnk12k.controller;
 import com.rmnk12k.dto.order.CreateOrderRequest;
 import com.rmnk12k.dto.order.ListOrderResponse;
 import com.rmnk12k.dto.order.OrderResponse;
+import com.rmnk12k.dto.order.UpdateOrderStatusRequest;
 import com.rmnk12k.service.OrderService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,5 +32,11 @@ public class OrderController {
     @PostMapping
     public void createOrder(@RequestBody @Valid CreateOrderRequest request) {
         orderService.create(request);
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @PutMapping
+    public void updateOrderStatus(@RequestBody UpdateOrderStatusRequest request) {
+        orderService.updateStatus(request);
     }
 }

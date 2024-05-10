@@ -7,6 +7,7 @@ import com.rmnk12k.service.UserService;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,22 +19,19 @@ import java.util.List;
 public class UsersController {
     private final UserService userService;
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping()
     public List<UserResponse> getAllUser() {
         return userService.getAllUser();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/{id}")
     public UserResponse getUser(@PathVariable Long id) {
         return userService.getUser(id);
     }
 
-    // заменила регистрация
-    @PostMapping
-    public void createUser(@RequestBody @Valid RegisterUserRequest registerUserRequest) {
-        userService.create(registerUserRequest);
-    }
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/{id}")
     public void deleteUser(@PathVariable Long id) {
         userService.delete(id);

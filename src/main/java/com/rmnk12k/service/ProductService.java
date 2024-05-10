@@ -22,7 +22,7 @@ import java.util.Optional;
 public class ProductService {
     private final ProductRepo productRepo;
 
-    public void create(ProductCreateRequest productCreateRequest) {
+    public Product create(ProductCreateRequest productCreateRequest) {
         log.info("create product: {}", productCreateRequest);
 
         ProductType type = ProductType.getType(productCreateRequest.type());
@@ -35,7 +35,7 @@ public class ProductService {
                 .created(currentTime)
                 .updated(currentTime)
                 .build();
-        productRepo.save(product);
+        return productRepo.save(product);
     }
 
     public void delete(Long id) {
@@ -81,17 +81,27 @@ public class ProductService {
     public List<ProductResponse> getAll() {
         log.info("get all product");
 
-        return productRepo.findAll().stream()
+        List<Product> products = productRepo.findAll();
+        return listProductToListProductResponse(products);
+    }
+
+    public List<ProductResponse> getAllByType(String type) {
+        List<Product> productsByType = productRepo.findAllByType(type);
+        return listProductToListProductResponse(productsByType);
+    }
+
+    private List<ProductResponse> listProductToListProductResponse(List<Product> products) {
+        return products.stream()
                 .map(
-                product -> ProductResponse.builder()
-                        .id(product.getId())
-                        .name(product.getName())
-                        .price(product.getPrice())
-                        .description(product.getDescription())
-                        .type(product.getType())
-                        .created(product.getCreated())
-                        .updated(product.getUpdated())
-                        .build())
+                        product -> ProductResponse.builder()
+                                .id(product.getId())
+                                .name(product.getName())
+                                .price(product.getPrice())
+                                .description(product.getDescription())
+                                .type(product.getType())
+                                .created(product.getCreated())
+                                .updated(product.getUpdated())
+                                .build())
                 .toList();
     }
 }
